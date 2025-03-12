@@ -3,6 +3,7 @@ This repo have sample code of flutter app. This code have some common stuff and 
 
 # Generate model and route class file
 flutter packages pub run build_runner build --delete-conflicting-outputs
+dart run build_runner build --delete-conflicting-outputs
 
 # Generate release build
 flutter build apk --split-per-abi

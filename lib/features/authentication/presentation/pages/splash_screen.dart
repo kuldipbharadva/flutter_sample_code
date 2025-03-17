@@ -39,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
               child: Center(
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
-                    child: icLogoWhite.imageAssetWidget(
+                    child: icLogo.imageAssetWidget(
                         height: 130.h, width: 130.h)),
               ),
             );

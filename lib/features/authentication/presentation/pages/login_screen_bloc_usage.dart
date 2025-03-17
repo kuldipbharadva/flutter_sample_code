@@ -11,31 +11,32 @@ import 'package:fluttersampleapp/core/widgets/common_functions.dart';
 import 'package:fluttersampleapp/core/widgets/common_icon_button_widget.dart';
 import 'package:fluttersampleapp/core/widgets/custom_text_form_field.dart';
 import 'package:fluttersampleapp/features/authentication/dependency/auth_get_it.dart';
-import 'package:fluttersampleapp/features/authentication/presentation/cubits/authentication_cubit.dart';
-import 'package:fluttersampleapp/features/authentication/presentation/cubits/authentication_state.dart';
+import 'package:fluttersampleapp/features/authentication/presentation/blocs/auth_bloc.dart';
+import 'package:fluttersampleapp/features/authentication/presentation/blocs/auth_event.dart';
+import 'package:fluttersampleapp/features/authentication/presentation/blocs/auth_state.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 @RoutePage()
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class LoginScreenBlocUsage extends StatefulWidget {
+  const LoginScreenBlocUsage({super.key});
 
   @override
-  LoginScreenState createState() => LoginScreenState();
+  LoginScreenBlocUsageState createState() => LoginScreenBlocUsageState();
 }
 
-class LoginScreenState extends State<LoginScreen> {
-  late AuthenticationCubit _authenticationCubit;
+class LoginScreenBlocUsageState extends State<LoginScreenBlocUsage> {
+  late AuthBloc _authBloc;
 
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    _authenticationCubit = authGetIt.get<AuthenticationCubit>();
-    _authenticationCubit.getClientDeviceInformation();
-    _authenticationCubit.usernameEditController.text = 'test';
-    _authenticationCubit.passwordEditController.text = 'test@123';
+    _authBloc = authGetIt.get<AuthBloc>();
+    _authBloc.getClientDeviceInformation();
+    _authBloc.usernameEditController.text = 'test';
+    _authBloc.passwordEditController.text = 'test@123';
   }
 
   @override
@@ -47,10 +48,9 @@ class LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (BuildContext context) {
-        _authenticationCubit.initBiometric();
-        return _authenticationCubit;
+        return _authBloc;
       },
-      child: BlocConsumer<AuthenticationCubit, AuthenticationState>(
+      child: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is FailureState) {
             showAlertDialog(
@@ -84,7 +84,6 @@ class LoginScreenState extends State<LoginScreen> {
                               _fieldView(),
                               _loginButton(context, state),
                               32.toSizedBoxHeight,
-                              _biometricView(context),
                               _technicalSupportView(),
                             ],
                           ),
@@ -106,7 +105,7 @@ class LoginScreenState extends State<LoginScreen> {
       children: [
         12.toSizedBoxHeight,
         CustomTextFormField(
-          controller: _authenticationCubit.usernameEditController,
+          controller: _authBloc.usernameEditController,
           hintText: 'Username',
           inputType: TextInputType.number,
           validator: validatedUserName.call,
@@ -116,7 +115,7 @@ class LoginScreenState extends State<LoginScreen> {
         ),
         16.toSizedBoxHeight,
         CustomTextFormField(
-          controller: _authenticationCubit.passwordEditController,
+          controller: _authBloc.passwordEditController,
           hintText: 'Password',
           validator: passwordValidator.call,
           isShowSuffixIcon: true,
@@ -128,38 +127,19 @@ class LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _loginButton(BuildContext context, AuthenticationState state) {
+  Widget _loginButton(BuildContext context, AuthState state) {
     return CommonButtonWidget(
       buttonText: 'Login',
       isLoading: state is LoadingState,
       onPressed: () {
         if (_formKey.currentState!.validate()) {
-          _authenticationCubit.apiCallLogin(
-            context: context,
-            username: _authenticationCubit.usernameEditController.text
-                .toString()
-                .toString(),
-            password: _authenticationCubit.passwordEditController.text
-                .trim()
-                .toString(),
-          );
+          _authBloc.add(LoginRequestEvent(
+            context,
+            _authBloc.usernameEditController.text.trim(),
+            _authBloc.passwordEditController.text.trim(),
+          ));
         }
       },
-    );
-  }
-
-  Widget _biometricView(BuildContext context) {
-    return Center(
-      child: Visibility(
-        visible: _authenticationCubit.isBiometricSupported &&
-            _authenticationCubit.isAlreadyAuthenticatedForBiometric,
-        child: InkWell(
-            onTap: () {
-              _authenticationCubit.authenticateBiometric(context);
-            },
-            child: icFingerPrintRound.imageAssetWidget(
-                height: 60, width: 60, iconColor: colorBlue)),
-      ),
     );
   }
 

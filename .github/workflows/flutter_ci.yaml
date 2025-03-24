@@ -14,8 +14,8 @@ jobs:
     runs-on: macos-latest
 
     steps:
-#      - name: Checkout Repository
-#        uses: actions/checkout@v3  # Fetches latest code from GitHub
+      - name: Checkout Repository
+        uses: actions/checkout@v3  # Fetches latest code from GitHub
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2

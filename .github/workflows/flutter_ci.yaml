@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     name: Flutter Sample App
-    runs-on: mac-os
+    runs-on: macos-latest
 
     steps:
 #      - name: Checkout Repository

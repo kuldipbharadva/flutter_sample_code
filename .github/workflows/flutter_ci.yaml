@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v3  # Fetches latest code from GitHub
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@v3
         with:
           flutter-version: "3.27.1"  # Use latest Flutter version
 

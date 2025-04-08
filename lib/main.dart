@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttersampleapp/core/dependency/global_get_it.dart';
+import 'package:fluttersampleapp/core/firebase_config/remote_config_service.dart';
 import 'package:fluttersampleapp/core/model/preference_info_model.dart';
 import 'package:fluttersampleapp/core/push_notification/push_notification_helper.dart';
 import 'package:fluttersampleapp/core/routes/app_router.dart';
@@ -17,6 +18,7 @@ PreferenceInfoModel preferenceInfoModel = PreferenceInfoModel();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await RemoteConfigService().initialize();
   await initializeGetIt();
   await PushNotificationHelper.configurePush();
   await _loadPreferenceValue();

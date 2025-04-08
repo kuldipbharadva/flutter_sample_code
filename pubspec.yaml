@@ -53,7 +53,7 @@ dependencies:
   #  permission_handler: ^11.3.1
   cached_network_image: ^3.4.1
   cached_memory_image: ^1.5.0
-  shared_preferences: ^2.5.2
+  shared_preferences: ^2.5.3
   flutter_screenutil: ^5.9.3
   fluttertoast: ^8.2.12
   intl: ^0.20.2
@@ -63,9 +63,10 @@ dependencies:
   infinite_scroll_pagination: ^5.0.0
   url_launcher: ^6.3.1
   local_auth: ^2.3.0
-  firebase_core: ^3.12.1
+  firebase_core: ^3.13.0
   flutter_local_notifications: ^19.0.0
-  firebase_messaging: ^15.2.4
+  firebase_messaging: ^15.2.5
+  firebase_remote_config: ^5.4.3
 
 dev_dependencies:
   flutter_test:

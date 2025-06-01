@@ -1,7 +1,6 @@
 import 'dart:collection';
 import 'dart:io';
 
-import 'package:auto_route/auto_route.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttersampleapp/core/storage/i_preference.dart';
 import 'package:fluttersampleapp/core/storage/preference_keys.dart';
-import 'package:fluttersampleapp/core/widgets/common_functions.dart';
+import 'package:fluttersampleapp/core/utils/common_functions.dart';
 import 'package:fluttersampleapp/features/authentication/data/models/login_response.dart';
 import 'package:fluttersampleapp/features/authentication/domain/usecase/authentication_usecase.dart';
 import 'package:fluttersampleapp/main.dart';

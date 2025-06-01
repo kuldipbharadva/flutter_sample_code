@@ -206,3 +206,22 @@ Future<TimeOfDay?> commonTimePickerDialog(BuildContext context,
   );
   return picked;
 }
+
+Widget commonSwitch({required bool value, required Function(bool) onChanged}) {
+  return SizedBox(
+    width: 40,
+    child: Transform.scale(
+      scale: 0.75,
+      child: Switch.adaptive(
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        value: value,
+        activeTrackColor: colorBlue.withValues(alpha: 0.7),
+        activeColor: colorBlue,
+        inactiveTrackColor: colorGreyLightBg,
+        inactiveThumbColor: colorGrey.withValues(alpha: 0.6),
+        trackOutlineColor: WidgetStatePropertyAll(Colors.transparent),
+        onChanged: onChanged,
+      ),
+    ),
+  );
+}

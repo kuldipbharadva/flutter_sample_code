@@ -7,7 +7,7 @@ import 'package:fluttersampleapp/core/utils/app_size_constants.dart';
 import 'package:fluttersampleapp/core/utils/form_validators.dart';
 import 'package:fluttersampleapp/core/utils/image_constants.dart';
 import 'package:fluttersampleapp/core/widgets/common_button_widget.dart';
-import 'package:fluttersampleapp/core/widgets/common_functions.dart';
+import 'package:fluttersampleapp/core/utils/common_functions.dart';
 import 'package:fluttersampleapp/core/widgets/common_icon_button_widget.dart';
 import 'package:fluttersampleapp/core/widgets/custom_text_form_field.dart';
 import 'package:fluttersampleapp/features/authentication/dependency/auth_get_it.dart';

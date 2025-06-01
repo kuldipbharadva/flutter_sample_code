@@ -10,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttersampleapp/core/routes/app_router.gr.dart';
 import 'package:fluttersampleapp/core/storage/i_preference.dart';
 import 'package:fluttersampleapp/core/storage/preference_keys.dart';
-import 'package:fluttersampleapp/core/widgets/common_functions.dart';
+import 'package:fluttersampleapp/core/utils/common_functions.dart';
 import 'package:fluttersampleapp/features/authentication/data/models/login_response.dart';
 import 'package:fluttersampleapp/features/authentication/domain/usecase/authentication_usecase.dart';
 import 'package:fluttersampleapp/main.dart';

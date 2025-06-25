@@ -83,7 +83,7 @@ class RemoteDataSourceImpl extends IRemoteDataSource {
         );
       }
     } else {
-      throw ErrorMessages.errorDeviceOffline;
+      throw ErrorMessages.errorMsgNoInternet;
     }
   }
 
@@ -161,7 +161,7 @@ class RemoteDataSourceImpl extends IRemoteDataSource {
         );
       }
     } else {
-      throw ErrorMessages.errorDeviceOffline;
+      throw ErrorMessages.errorMsgNoInternet;
     }
   }
 }

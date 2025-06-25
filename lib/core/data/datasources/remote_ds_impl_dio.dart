@@ -41,8 +41,11 @@ class RemoteDataSourceImplDio extends IRemoteDataSourceDio {
         print('api request query params :: ${queryParams.toString()}');
       }
 
-      response = await client.get(path,
-          queryParameters: queryParams, data: requestBody);
+      response = await client.get(
+        path,
+        queryParameters: queryParams,
+        data: requestBody,
+      );
       if (kDebugMode) {
         print('executeGet :: response => ${response.data}');
       }
@@ -57,7 +60,7 @@ class RemoteDataSourceImplDio extends IRemoteDataSourceDio {
         );
       }
     } else {
-      throw ErrorMessages.errorDeviceOffline;
+      throw ErrorMessages.errorMsgNoInternet;
     }
   }
 
@@ -75,9 +78,7 @@ class RemoteDataSourceImplDio extends IRemoteDataSourceDio {
     Response? response;
 
     if (isConnected) {
-      client.options.headers = {
-        'Accept-Language': 'ar-JO',
-      };
+      client.options.headers = {'Accept-Language': 'ar-JO'};
       if (!path.contains(ApiConstants.login)) {
         client.options.headers.addAll({
           'Authorization': 'Bearer ${preferenceInfoModel.token}',
@@ -113,22 +114,7 @@ class RemoteDataSourceImplDio extends IRemoteDataSourceDio {
         );
       }
     } else {
-      throw ErrorMessages.errorDeviceOffline;
-    }
-  }
-
-  Exception handleDioError(DioException exception) {
-    if (exception.type == DioExceptionType.connectionTimeout) {
-      return Exception("Connection timeout. Please try again.");
-    } else if (exception.type == DioExceptionType.receiveTimeout) {
-      return Exception("Server response timeout. Please try again.");
-    } else if (exception.response != null) {
-      final statusCode = exception.response?.statusCode;
-      final message =
-          exception.response?.statusMessage ?? "Unknown error occurred.";
-      return Exception("Error $statusCode: $message");
-    } else {
-      return Exception("Something went wrong. Please try again.");
+      throw ErrorMessages.errorMsgNoInternet;
     }
   }
 }

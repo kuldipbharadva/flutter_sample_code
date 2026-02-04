@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:fluttersampleapp/core/utils/api_constants.dart';
+import 'package:fluttersampleapp/core/utils/common_functions.dart';
 import 'package:fluttersampleapp/main.dart';
 
 class RefreshTokenInterceptor extends Interceptor {
@@ -10,10 +10,7 @@ class RefreshTokenInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
-    if (kDebugMode) {
-      print(
-          'logcat :: interceptor onError called = ${err.response?.statusCode}');
-    }
+    logcat('interceptor onError called = ${err.response?.statusCode}');
     // return handler
     //     .resolve(err.response ?? Response(requestOptions: err.requestOptions));
     // return handler.next(err);
@@ -31,24 +28,18 @@ class RefreshTokenInterceptor extends Interceptor {
         return handler.next(err);
       }
     } on DioException catch (err) {
-      if (kDebugMode) {
-        print(
-            'logcat :: interceptor onError DioException = ${err.response?.statusCode}');
-      }
+      logcat('interceptor onError DioException = ${err.response?.statusCode}');
       return handler.next(err);
     } catch (e) {
-      if (kDebugMode) {
-        print('logcat :: interceptor onError catch = ${e.toString()}');
-      }
+      logcat('interceptor onError catch = ${e.toString()}');
+      logcat('interceptor onError catch = ${e.toString()}');
       return handler.next(err);
     }
   }
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    if (kDebugMode) {
-      print('logcat :: interceptor onRequest path = ${options.path}');
-    }
+    logcat('interceptor onRequest path = ${options.path}');
     if (!options.path.contains(ApiConstants.login)) {
       options.headers = {
         'Accept-Language': 'ar-JO',
@@ -60,12 +51,10 @@ class RefreshTokenInterceptor extends Interceptor {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) async {
-    if (kDebugMode) {
-      print(
-          'logcat :: interceptor onResponse status code => ${response.statusCode}');
-      print(
-          'logcat :: interceptor onResponse request options => ${response.requestOptions.toString()}');
-    }
+    logcat('interceptor onResponse status code => ${response.statusCode}');
+    logcat(
+      'interceptor onResponse request options => ${response.requestOptions.toString()}',
+    );
     if (response.statusCode == 401 &&
         response.requestOptions.path != ApiConstants.refreshToken) {
       await isRefreshedToken().then((value) async {
@@ -87,54 +76,47 @@ class RefreshTokenInterceptor extends Interceptor {
       'tokenRefresh': preferenceInfoModel.tokenRefresh,
       'username': preferenceInfoModel.username,
     };
-    if (kDebugMode) {
-      print('logcat :: refresh api request body :: ${reqData.toString()}');
-    }
+    logcat('refresh api request body :: ${reqData.toString()}');
 
     Response? res = await dio?.post(ApiConstants.refreshToken, data: reqData);
 
     if (res?.statusCode == 200 || res?.statusCode == 201) {
-      if (kDebugMode) {
-        print('logcat :: interceptor refresh token success');
-      }
+      logcat('interceptor refresh token success');
       /* TODO static manage this api response with your response model, below is the reference for you */
       /*LoginResponse loginRes = LoginResponse.fromJson(res?.data);
       preferenceInfoModel.token = loginRes.token;
       preferenceInfoModel.tokenRefresh = loginRes.tokenRefresh;
-      if (kDebugMode) {
-        print(
-            'logcat :: interceptor refresh token res = ${loginRes.tokenRefresh}');
-      }*/
+
+      logcat('interceptor refresh token res = ${loginRes.tokenRefresh}');*/
       isSuccess = true;
     } else {
-      if (kDebugMode) {
-        print(
-            'logcat :: interceptor refresh token api error = ${res?.statusCode}');
-      }
+      logcat('interceptor refresh token api error = ${res?.statusCode}');
       isSuccess = false;
     }
     return isSuccess;
   }
 
   Future<Response<dynamic>> _retryApiCall(RequestOptions requestOptions) async {
-    if (kDebugMode) {
-      print('logcat :: interceptor retry called');
-    }
-    final options = Options(method: requestOptions.method, headers: {
-      'Accept-Language': 'ar-JO',
-      'Authorization': 'Bearer ${preferenceInfoModel.token}',
-    });
+    logcat('interceptor retry called');
+    final options = Options(
+      method: requestOptions.method,
+      headers: {
+        'Accept-Language': 'ar-JO',
+        'Authorization': 'Bearer ${preferenceInfoModel.token}',
+      },
+    );
 
-    if (kDebugMode) {
-      print('retry = api request url :: ${requestOptions.path}');
-      print('retry = api request body :: ${requestOptions.data.toString()}');
-      print(
-          'retry = api request query params :: ${requestOptions.queryParameters.toString()}');
-    }
+    logcat('retry = api request url :: ${requestOptions.path}');
+    logcat('retry = api request body :: ${requestOptions.data.toString()}');
+    logcat(
+      'retry = api request query params :: ${requestOptions.queryParameters.toString()}',
+    );
 
-    return (dio ?? Dio()).request<dynamic>(requestOptions.path,
-        data: requestOptions.data,
-        queryParameters: requestOptions.queryParameters,
-        options: options);
+    return (dio ?? Dio()).request<dynamic>(
+      requestOptions.path,
+      data: requestOptions.data,
+      queryParameters: requestOptions.queryParameters,
+      options: options,
+    );
   }
 }

@@ -2,7 +2,6 @@ import 'dart:collection';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,10 +16,8 @@ import 'auth_event.dart';
 import 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc({
-    required this.iPreference,
-    required this.authenticationUseCase,
-  }) : super(AuthState().init()) {
+  AuthBloc({required this.iPreference, required this.authenticationUseCase})
+    : super(AuthState().init()) {
     _loginRequestEvent();
   }
 
@@ -43,7 +40,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           "agent": "Mobile",
           "client": val.brand,
           "os": "ANDROID ${val.version.release}",
-          "release": "DJS1.0"
+          "release": "DJS1.0",
         };
       } else if (Platform.isIOS) {
         final IosDeviceInfo val = await deviceInfoPlugin.iosInfo;
@@ -51,7 +48,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           "agent": "Mobile",
           "client": val.model,
           "os": "IOS ${Platform.operatingSystemVersion}",
-          "release": "DJS1.0"
+          "release": "DJS1.0",
         };
       }
     } on PlatformException {
@@ -59,7 +56,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         "agent": "Mobile",
         "client": "N/A",
         "os": "N/A",
-        "release": "DJS1.0"
+        "release": "DJS1.0",
       };
     }
   }
@@ -68,37 +65,53 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginRequestEvent>((event, emit) async {
       hideKeyBoard(context: event.context);
       emit(LoadingState());
-      final res = await authenticationUseCase(HashMap.from({
-        'username': event.username,
-        'password': event.password,
-        'deviceToken': preferenceInfoModel.fcmToken ?? '',
-        'clientInformation': HashMap.from(_clientInformation),
-      }));
+      final res = await authenticationUseCase(
+        HashMap.from({
+          'username': event.username,
+          'password': event.password,
+          'deviceToken': preferenceInfoModel.fcmToken ?? '',
+          'clientInformation': HashMap.from(_clientInformation),
+        }),
+      );
 
-      if (kDebugMode) {
-        print('logcat :: api response login = ${res.toString()} ');
-      }
+      logcat('api response login = ${res.toString()} ');
 
-      res.fold((l) {
-        emit(FailureState(msg: l.errorMessage));
-        return l;
-      }, (r) async {
-        loginResponse = r;
-        preferenceInfoModel.token = loginResponse?.token;
-        preferenceInfoModel.tokenRefresh = loginResponse?.tokenRefresh;
-        preferenceInfoModel.username = event.username;
-        preferenceInfoModel.fullName = loginResponse?.fullNameAr;
-        iPreference.setPreferenceValue(preferenceKey: PreferenceKey.prefToken, value: loginResponse?.token ?? '');
-        iPreference.setPreferenceValue(preferenceKey: PreferenceKey.prefTokenRefresh, value: loginResponse?.tokenRefresh ?? '');
-        iPreference.setPreferenceValue(
-            preferenceKey: PreferenceKey.prefUsername, value: event.username);
-        iPreference.setPreferenceValue(
-            preferenceKey: PreferenceKey.prefPassword, value: event.password);
-        iPreference.setPreferenceValue(preferenceKey: PreferenceKey.prefFullName, value: loginResponse?.fullNameAr ?? '');
-        // AutoRouter.of(event.context).replaceAll([const DashboardRoute()]);
-        emit(SuccessState());
-        return r;
-      });
+      res.fold(
+        (l) {
+          emit(FailureState(msg: l.errorMessage));
+          return l;
+        },
+        (r) async {
+          loginResponse = r;
+          preferenceInfoModel.token = loginResponse?.token;
+          preferenceInfoModel.tokenRefresh = loginResponse?.tokenRefresh;
+          preferenceInfoModel.username = event.username;
+          preferenceInfoModel.fullName = loginResponse?.fullNameAr;
+          iPreference.setPreferenceValue(
+            preferenceKey: PreferenceKey.prefToken,
+            value: loginResponse?.token ?? '',
+          );
+          iPreference.setPreferenceValue(
+            preferenceKey: PreferenceKey.prefTokenRefresh,
+            value: loginResponse?.tokenRefresh ?? '',
+          );
+          iPreference.setPreferenceValue(
+            preferenceKey: PreferenceKey.prefUsername,
+            value: event.username,
+          );
+          iPreference.setPreferenceValue(
+            preferenceKey: PreferenceKey.prefPassword,
+            value: event.password,
+          );
+          iPreference.setPreferenceValue(
+            preferenceKey: PreferenceKey.prefFullName,
+            value: loginResponse?.fullNameAr ?? '',
+          );
+          // AutoRouter.of(event.context).replaceAll([const DashboardRoute()]);
+          emit(SuccessState());
+          return r;
+        },
+      );
     });
   }
 }

@@ -14,10 +14,12 @@ class RemoteConfigService {
   Future<void> initialize() async {
     remoteConfig = FirebaseRemoteConfig.instance;
 
-    await remoteConfig.setConfigSettings(RemoteConfigSettings(
-      fetchTimeout: const Duration(seconds: 10),
-      minimumFetchInterval: const Duration(seconds: 10),
-    ));
+    await remoteConfig.setConfigSettings(
+      RemoteConfigSettings(
+        fetchTimeout: const Duration(seconds: 10),
+        minimumFetchInterval: const Duration(seconds: 10),
+      ),
+    );
 
     await remoteConfig.fetchAndActivate();
   }
@@ -32,8 +34,6 @@ class RemoteConfigService {
     => You can read config value as per below use, and you can manage config file variables
     according to requirements, check main.dart for initialization
 
-    if (kDebugMode) {
     var envVar = RemoteConfigService().envVar;
-    print('logcat :: env var = ${envVar['isStage']}');
-    }
+    logcat('env var = ${envVar['isStage']}');
  * */

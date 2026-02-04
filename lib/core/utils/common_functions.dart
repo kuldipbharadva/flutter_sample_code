@@ -7,6 +7,10 @@ import 'package:fluttersampleapp/core/utils/app_strings.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
+void logcat(String? value) {
+  debugPrint('logcat :: $value');
+}
+
 void showBottomSheetDialog({
   required BuildContext context,
   required Widget widget,
@@ -118,7 +122,7 @@ Widget commonDropdown<T>({
 }) {
   return DropdownButtonFormField<T>(
     icon: const Icon(Icons.arrow_drop_down_circle_outlined, color: colorBlue),
-    value: selectedValue,
+    initialValue: selectedValue,
     decoration: InputDecoration(
       isDense: true,
       contentPadding: const EdgeInsets.all(12.0),
@@ -216,7 +220,7 @@ Widget commonSwitch({required bool value, required Function(bool) onChanged}) {
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         value: value,
         activeTrackColor: colorBlue.withValues(alpha: 0.7),
-        activeColor: colorBlue,
+        activeThumbColor: colorBlue,
         inactiveTrackColor: colorGreyLightBg,
         inactiveThumbColor: colorGrey.withValues(alpha: 0.6),
         trackOutlineColor: WidgetStatePropertyAll(Colors.transparent),

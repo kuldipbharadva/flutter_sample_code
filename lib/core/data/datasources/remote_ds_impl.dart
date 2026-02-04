@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
 import 'package:fluttersampleapp/core/data/datasources/i_remote_ds.dart';
 import 'package:fluttersampleapp/core/dependency/global_get_it.dart';
 import 'package:fluttersampleapp/core/error/error_codes.dart';
@@ -8,12 +6,13 @@ import 'package:fluttersampleapp/core/error/failure.dart';
 import 'package:fluttersampleapp/core/model/i_response.dart';
 import 'package:fluttersampleapp/core/model/response_model.dart';
 import 'package:fluttersampleapp/core/utils/api_constants.dart';
+import 'package:fluttersampleapp/core/utils/common_functions.dart';
 import 'package:fluttersampleapp/core/utils/network_info.dart';
 import 'package:http/http.dart' as http;
 
 Map<String, String> commonHeader = {
   'Content-Type': 'application/json',
-  'Accept': '*/*'
+  'Accept': '*/*',
 };
 
 class RemoteDataSourceImpl extends IRemoteDataSource {
@@ -36,27 +35,24 @@ class RemoteDataSourceImpl extends IRemoteDataSource {
 
     if (isConnected) {
       try {
-        if (kDebugMode) {
-          print("ApiConstants.baseUrl : ${ApiConstants.baseUrl + path}");
-        }
+        logcat('ApiConstants.baseUrl : ${ApiConstants.baseUrl + path}');
         ResponseModel responseData;
         qParams != null
             ? response = await client.get(
                 Uri.http(ApiConstants.baseUrl, path, qParams),
               )
             : response = await client.get(
-                Uri.http(ApiConstants.baseUrl, path,
-                    query != null ? {query: queryValue} : null),
+                Uri.http(
+                  ApiConstants.baseUrl,
+                  path,
+                  query != null ? {query: queryValue} : null,
+                ),
               );
-        if (kDebugMode) {
-          print('executeGet---> ${response.request!.url}');
-          print('executeGet---> ${response.body}');
-        }
+        logcat('executeGet---> ${response.request!.url}');
+        logcat('executeGet---> ${response.body}');
 
         responseData = ResponseModel.fromJson(json.decode(response.body));
-        if (kDebugMode) {
-          print('::::::::::: ${response.body}');
-        }
+        logcat('::::::::::: ${response.body}');
         if (response.statusCode == 200) {
           return responseData;
         } else {
@@ -74,9 +70,7 @@ class RemoteDataSourceImpl extends IRemoteDataSource {
               "${response?.statusCode} ${response?.reasonPhrase.toString()}",
         );
       } on Exception catch (error) {
-        if (kDebugMode) {
-          print("exception error get : $error");
-        }
+        logcat("exception error get : $error");
         throw AppFailure(
           errorMessages: error.toString(),
           statusCodes: ErrorCodes.errorAtDatasource,
@@ -103,32 +97,27 @@ class RemoteDataSourceImpl extends IRemoteDataSource {
     if (isConnected) {
       try {
         ResponseModel responseData;
-        if (kDebugMode) {
-          print('api request url :: ${ApiConstants.baseUrl}$path');
-          print('api request header :: ${commonHeader.toString()}');
-          print('api request body :: ${requestBody.toString()}');
-        }
+        logcat('api request url :: ${ApiConstants.baseUrl}$path');
+        logcat('api request header :: ${commonHeader.toString()}');
+        logcat('api request body :: ${requestBody.toString()}');
 
         qParams != null
             ? response = await client.post(
-                Uri.http(
-                  ApiConstants.baseUrl,
-                  path,
-                  qParams,
-                ),
+                Uri.http(ApiConstants.baseUrl, path, qParams),
                 headers: commonHeader,
                 body: requestBody,
               )
             : response = await client.post(
-                Uri.http(ApiConstants.baseUrl, path,
-                    query != null ? {query: queryValue} : null),
+                Uri.http(
+                  ApiConstants.baseUrl,
+                  path,
+                  query != null ? {query: queryValue} : null,
+                ),
                 headers: commonHeader,
                 body: requestBody,
               );
-        if (kDebugMode) {
-          print('executePost :: ${response.request?.url ?? ''}');
-          print('executePost :: ${response.body}');
-        }
+        logcat('executePost :: ${response.request?.url ?? ''}');
+        logcat('executePost :: ${response.body}');
 
         responseData = ResponseModel.fromJson(json.decode(response.body));
 
@@ -142,9 +131,7 @@ class RemoteDataSourceImpl extends IRemoteDataSource {
           );
         }
       } on FormatException catch (error) {
-        if (kDebugMode) {
-          print("error in remote :: $error");
-        }
+        logcat("error in remote :: $error");
         throw ServerFailure(
           statusFailCode: response?.statusCode,
           statusMessage: response?.reasonPhrase.toString(),
@@ -152,9 +139,7 @@ class RemoteDataSourceImpl extends IRemoteDataSource {
               "${response?.statusCode} ${response?.reasonPhrase.toString()}",
         );
       } on Exception catch (error) {
-        if (kDebugMode) {
-          print("error in remote  : $error");
-        }
+        logcat("error in remote  : $error");
         throw AppFailure(
           errorMessages: error.toString(),
           statusCodes: ErrorCodes.errorAtDatasource,

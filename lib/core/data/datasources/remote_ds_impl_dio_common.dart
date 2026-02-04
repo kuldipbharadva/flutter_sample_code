@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:fluttersampleapp/core/data/datasources/i_remote_ds_dio_common.dart';
 import 'package:fluttersampleapp/core/dependency/global_get_it.dart';
 import 'package:fluttersampleapp/core/error/error_codes.dart';
 import 'package:fluttersampleapp/core/error/failure.dart';
 import 'package:fluttersampleapp/core/utils/api_constants.dart';
 import 'package:fluttersampleapp/core/utils/app_strings.dart';
+import 'package:fluttersampleapp/core/utils/common_functions.dart';
 import 'package:fluttersampleapp/core/utils/network_info.dart';
 import 'package:fluttersampleapp/main.dart';
 
@@ -30,12 +30,10 @@ class RemoteDataSourceImplDioCommon extends IRemoteDataSourceDioCommon {
           'Authorization': 'Bearer ${preferenceInfoModel.token}',
         });
       }
-      if (kDebugMode) {
-        print('api request url :: ${ApiConstants.baseUrl}$url');
-        print('api request header :: ${client.options.headers}');
-        print('api request body :: ${requestBody.toString()}');
-        print('api request query params :: ${queryParams.toString()}');
-      }
+      logcat('api request url :: ${ApiConstants.baseUrl}$url');
+      logcat('api request header :: ${client.options.headers}');
+      logcat('api request body :: ${requestBody.toString()}');
+      logcat('api request query params :: ${queryParams.toString()}');
 
       try {
         final response = await client.get(
@@ -47,9 +45,7 @@ class RemoteDataSourceImplDioCommon extends IRemoteDataSourceDioCommon {
           final parsedJsonData = fromJson != null
               ? fromJson(response.data)
               : smartParse<T>(response.data);
-          if (kDebugMode) {
-            print('logcat :: api response parsed => ${response.toString()}');
-          }
+          logcat('api response parsed => ${response.toString()}');
           return Right(parsedJsonData);
         } else {
           return Left(
@@ -91,12 +87,10 @@ class RemoteDataSourceImplDioCommon extends IRemoteDataSourceDioCommon {
         });
       }
 
-      if (kDebugMode) {
-        print('api request url :: ${ApiConstants.baseUrl}$url');
-        print('api request header :: ${client.options.headers}');
-        print('api request body :: ${requestBody.toString()}');
-        print('api request query params :: ${queryParams.toString()}');
-      }
+      logcat('api request url :: ${ApiConstants.baseUrl}$url');
+      logcat('api request header :: ${client.options.headers}');
+      logcat('api request body :: ${requestBody.toString()}');
+      logcat('api request query params :: ${queryParams.toString()}');
 
       try {
         final response = await client.post(
@@ -108,9 +102,7 @@ class RemoteDataSourceImplDioCommon extends IRemoteDataSourceDioCommon {
           final parsedJsonData = fromJson != null
               ? fromJson(response.data)
               : smartParse<T>(response.data);
-          if (kDebugMode) {
-            print('logcat :: api response parsed => ${response.toString()}');
-          }
+          logcat('api response parsed => ${response.toString()}');
           return Right(parsedJsonData);
         } else {
           return Left(
@@ -157,9 +149,7 @@ class RemoteDataSourceImplDioCommon extends IRemoteDataSourceDioCommon {
           final parsedJsonData = fromJson != null
               ? fromJson(response.data)
               : smartParse<T>(response.data);
-          if (kDebugMode) {
-            print('logcat :: api response parsed => ${response.toString()}');
-          }
+          logcat('api response parsed => ${response.toString()}');
           return Right(parsedJsonData);
         } else {
           return Left(
@@ -195,13 +185,11 @@ class RemoteDataSourceImplDioCommon extends IRemoteDataSourceDioCommon {
       data = opts.requestBody;
     }
 
-    if (kDebugMode) {
-      print('api request call url :: ${ApiConstants.baseUrl}${opts.url}');
-      print('api request call method type :: ${opts.methodType}');
-      print('api request call header :: ${client.options.headers}');
-      print('api request call query params :: ${opts.queryParams.toString()}');
-      print('api request call body :: ${data.toString()}');
-    }
+    logcat('api request call url :: ${ApiConstants.baseUrl}${opts.url}');
+    logcat('api request call method type :: ${opts.methodType}');
+    logcat('api request call header :: ${client.options.headers}');
+    logcat('api request call query params :: ${opts.queryParams.toString()}');
+    logcat('api request call body :: ${data.toString()}');
 
     switch (opts.methodType) {
       case RequestMethodType.get:

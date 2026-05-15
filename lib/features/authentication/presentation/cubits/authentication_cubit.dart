@@ -102,7 +102,6 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
       authenticated = await localAuthentication.authenticate(
         localizedReason:
             'Enter phone screen lock pattern, pin, password or fingerprint.',
-        options: const AuthenticationOptions(stickyAuth: true),
       );
       if (authenticated && context.mounted) {
         String prefUsername = preferenceInfoModel.username ?? '';

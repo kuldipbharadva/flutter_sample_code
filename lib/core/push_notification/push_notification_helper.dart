@@ -103,7 +103,7 @@ class PushNotificationHelper {
 
     /// didReceived called when app open or in background and tap on received notification
     _flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
+      settings: initializationSettings,
       onDidReceiveNotificationResponse:
           (NotificationResponse notificationResponse) {
             logcat(
@@ -179,10 +179,10 @@ class PushNotificationHelper {
     final body = map.notification?.body ?? map.data['body'];
 
     await _flutterLocalNotificationsPlugin.show(
-      Random().nextInt(100),
-      title,
-      body,
-      platformChannelSpecifics,
+      id: Random().nextInt(100),
+      title: title,
+      body: body,
+      notificationDetails: platformChannelSpecifics,
       payload: jsonEncode(map.data),
     );
   }

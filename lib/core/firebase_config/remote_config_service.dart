@@ -10,6 +10,7 @@ class RemoteConfigService {
   RemoteConfigService._internal();
 
   late FirebaseRemoteConfig remoteConfig;
+  String firebaseConfigKeyName = 'firebase_config_env_vars';
 
   Future<void> initialize() async {
     remoteConfig = FirebaseRemoteConfig.instance;
@@ -24,7 +25,8 @@ class RemoteConfigService {
     await remoteConfig.fetchAndActivate();
   }
 
-  dynamic get envVar => json.decode(remoteConfig.getString('env_vars'));
+  // dynamic get envVar => json.decode(remoteConfig.getString('env_vars'));
+  dynamic get envVar => json.decode(remoteConfig.getString(firebaseConfigKeyName));
 }
 
 /**
